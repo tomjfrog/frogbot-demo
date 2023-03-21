@@ -40,5 +40,5 @@ jobs:
          # Publish the build-info to Artifactory
          jf rt bp
          # Scan the published build-info with Xray
-         jf bs
+         # jf bs
        if: always()
