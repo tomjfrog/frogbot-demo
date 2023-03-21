@@ -1,5 +1,5 @@
 
-name: 'JFrog CI Integration'
+name: 'Frogbot Test'
 on: [push]
 jobs:
  jfrog-ci-integration:
