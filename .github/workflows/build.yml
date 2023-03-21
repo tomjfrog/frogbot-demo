@@ -22,11 +22,11 @@ jobs:
          # config thing
          npm config fix
          # get version
-         echo $(jfrog -v)
+         echo $(jf -v)
          # Configure the project
-         jfrog rt npm-config --server-id-resolve jfrog-instance --repo-resolve default-npm-remote
+         jf rt npm-config --server-id-resolve jfrog-instance --repo-resolve default-npm-remote
          # Build the project using JFrog CLI
-         jfrog rt npmi
+         jf rt npmi
      - name: Failure check
        run: |
          echo "JFROG_BUILD_STATUS=FAIL" >> $GITHUB_ENV
@@ -34,11 +34,11 @@ jobs:
      - name: Publish build
        run: |
          # Collect and store environment variables in the build-info
-         jfrog rt bce
+         jf rt bce
          # Collect and store VCS details in the build-info
-         jfrog rt bag
+         jf rt bag
          # Publish the build-info to Artifactory
-         jfrog rt bp
+         jf rt bp
          # Scan the published build-info with Xray
-         jfrog rt bs
+         jf rt bs
        if: always()
