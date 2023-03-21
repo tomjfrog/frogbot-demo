@@ -21,6 +21,8 @@ jobs:
        run: |
          # config thing
          npm config fix
+         # get version
+         echo $(jfrog -v)
          # Configure the project
          jfrog rt npm-config --server-id-resolve jfrog-instance --repo-resolve default-npm-remote
          # Build the project using JFrog CLI
