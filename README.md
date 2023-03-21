@@ -1,9 +1,6 @@
 # Frogbot Demo
 
-
-
-
-The associated Watch:
+## The Defined Watch From My Jfrog Platform Deployment (JPD)
 ```json
 {
 	"general_data": {
@@ -34,7 +31,7 @@ The associated Watch:
 }
 ```
 
-The Policy:
+## The Policy Associated with the Watch:
 ```json
 {
 	"name": "frogbot-test-policy",
@@ -116,7 +113,7 @@ jobs:
           JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}  
           JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
           JF_INSTALL_DEPS_CMD: npm install  
-          JF_WATCHES: "frogbot-test-watch"
+          JF_WATCHES: "frogbot-test-watch" <----------------
 ```
 
 [Example PR with No Watch Defined](https://github.com/tomjfrog/frogbot-demo/pull/7), Frogbot using default logic:
