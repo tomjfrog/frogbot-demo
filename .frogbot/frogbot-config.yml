@@ -1,0 +1,11 @@
+- params:
+    git:
+      repoName: frogbot-demo
+      branches:
+        - main
+    scan:
+      projects:
+        - installCommand: npm i
+    jfrogPlatform:
+      watches:
+        - frogbot-test-watch
