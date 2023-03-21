@@ -34,8 +34,7 @@ jobs:
      - name: Publish Package
        run: |
          # Publish the package to Artifactory
-         jf rt npmp
-
+         jf npm p
      - name: Publish build
        run: |
          # Collect and store environment variables in the build-info
