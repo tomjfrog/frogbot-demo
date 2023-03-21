@@ -1,0 +1,8 @@
+- params:
+    git:
+      repoName: frogbot-demo
+      branches:
+        - main
+    scan:
+      projects:
+        - installCommand: npm i
