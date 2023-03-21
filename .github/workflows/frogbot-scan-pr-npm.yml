@@ -23,7 +23,6 @@ jobs:
           node-version: "16.x"
 
       - uses: jfrog/frogbot@v2
-        installCommand: npm install
         env:
           # [Mandatory]
           # JFrog platform URL
@@ -36,4 +35,6 @@ jobs:
           # [Mandatory]
           # The GitHub token automatically generated for the job
           JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          JF_INSTALL_DEPS_CMD: "npm i"
 
