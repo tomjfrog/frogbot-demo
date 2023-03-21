@@ -92,8 +92,6 @@ permissions:
 jobs:  
   scan-pull-request:  
     runs-on: ubuntu-latest  
-    # A pull request needs to be approved, before Frogbot scans it. Any GitHub user who is associated with the  
-    # "frogbot" GitHub environment can approve the pull request to be scanned.    environment: frogbot  
     steps:  
       - name: Checkout  
         uses: actions/checkout@v2  
