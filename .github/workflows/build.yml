@@ -24,13 +24,17 @@ jobs:
          # get version
          echo $(jf -v)
          # Configure the project
-         jf rt npm-config --server-id-resolve jfrog-instance --repo-resolve default-npm-remote
+         jf npmc --server-id-resolve jfrog-instance --repo-resolve default-npm-remote --repo-deploy frogbot-demo-local
          # Build the project using JFrog CLI
          jf rt npmi
      - name: Failure check
        run: |
          echo "JFROG_BUILD_STATUS=FAIL" >> $GITHUB_ENV
        if: failure()
+     - name: Publish Package
+       run: |
+         # Publish the package to Artifactory
+         jf npm p
      - name: Publish build
        run: |
          # Collect and store environment variables in the build-info
