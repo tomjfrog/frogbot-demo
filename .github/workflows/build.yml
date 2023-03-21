@@ -31,6 +31,11 @@ jobs:
        run: |
          echo "JFROG_BUILD_STATUS=FAIL" >> $GITHUB_ENV
        if: failure()
+     - name: Publish Package
+       run: |
+         # Publish the package to Artifactory
+         jf rt npmp
+
      - name: Publish build
        run: |
          # Collect and store environment variables in the build-info
