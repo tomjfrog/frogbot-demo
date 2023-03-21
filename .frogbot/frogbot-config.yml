@@ -6,3 +6,5 @@
     scan:
       projects:
         - installCommand: npm i
+          workingDirs:
+            - package.json
