@@ -13,6 +13,7 @@ jobs:
     environment: frogbot
     steps:
       - uses: actions/checkout@v2
+        name: Checkout
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
