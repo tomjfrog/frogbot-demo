@@ -24,7 +24,7 @@ jobs:
          # get version
          echo $(jf -v)
          # Configure the project
-         jf rt npm-config --server-id-resolve jfrog-instance --repo-resolve default-npm-remote
+         jf npmc --server-id-resolve jfrog-instance --repo-resolve default-npm-remote --repo-deploy frogbot-demo-local
          # Build the project using JFrog CLI
          jf rt npmi
      - name: Failure check
