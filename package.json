@@ -13,10 +13,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "eslint": "^8.36.0",
     "express": "^4.16.2",
     "fs": "0.0.1-security",
     "jasmine": "^3.1.0",
     "jasmine-node": "^1.14.5",
+    "lodash": "4.17.15",
     "pack-zip": "^0.2.2",
     "request": "^2.83.0"
   },
