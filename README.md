@@ -118,3 +118,5 @@ jobs:
           JF_INSTALL_DEPS_CMD: npm install  
           JF_WATCHES: "frogbot-test-watch"
 ```
+
+[Example PR with No Watch Defined](https://github.com/tomjfrog/frogbot-demo/pull/7), Frogbot using default logic:
