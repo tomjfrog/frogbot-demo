@@ -6,6 +6,8 @@
     scan:
       projects:
         - installCommand: npm i
+          workingDirs:
+            - .
     jfrogPlatform:
       watches:
         - frogbot-test-watch
