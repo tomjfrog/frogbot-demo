@@ -19,7 +19,7 @@
     "jasmine": "^3.1.0",
     "jasmine-node": "^1.14.5",
     "pack-zip": "^0.2.2",
-    "request": "2.2.6"
+    "request": "2.9.3"
   },
   "devDependencies": {
     "pack-zip": "^0.2.2"
