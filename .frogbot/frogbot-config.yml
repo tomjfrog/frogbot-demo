@@ -4,6 +4,8 @@
       branches:
         - main
     scan:
+      includeAllVulnerabilities: true
+      failOnSecurityIssues: true
       projects:
         - installCommand: npm i
           workingDirs:
