@@ -25,3 +25,4 @@ jobs:
           JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
           JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JF_INSTALL_DEPS_CMD: npm install
+          JF_INCLUDE_ALL_VULNERABILITIES: "TRUE"
