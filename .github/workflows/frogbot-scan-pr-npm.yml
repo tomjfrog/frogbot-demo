@@ -26,4 +26,3 @@ jobs:
           JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JF_INSTALL_DEPS_CMD: npm install
           JF_INCLUDE_ALL_VULNERABILITIES: "TRUE"
-#          JF_WATCHES: frogbot-test-watch
