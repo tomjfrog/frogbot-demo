@@ -1,5 +1,7 @@
 # Frogbot: full repository scan on a schedule and on demand; can open autofix PRs.
-# Setup: https://docs.jfrog.com/security/docs/frogbot
+# Auth: OpenID Connect to JFrog (no JF_ACCESS_TOKEN secret). Set repo variables JF_URL and
+# JF_OIDC_PROVIDER_NAME (Provider Name from Administration > Manage Integrations > OIDC).
+# Setup: https://docs.jfrog.com/security/docs/github-actions
 # Template source: https://github.com/jfrog/frogbot/blob/master/.github/workflows/frogbot-scan-repository.yml
 
 name: "Frogbot Scan Repository"
@@ -12,6 +14,7 @@ on:
 
 permissions:
   contents: write
+  id-token: write
   pull-requests: write
   security-events: write
 
@@ -25,18 +28,17 @@ jobs:
         branch: ["main"]
     steps:
       - uses: jfrog/frogbot@v2
+        with:
+          oidc-provider-name: ${{ vars.JF_OIDC_PROVIDER_NAME }}
         env:
           JFROG_CLI_LOG_LEVEL: "DEBUG"
-          # [Mandatory]
-          JF_URL: ${{ secrets.FROGBOT_URL }}
+          JF_URL: ${{ vars.JF_URL }}
 
-          # [Mandatory if JF_USER and JF_PASSWORD are not provided]
-          JF_ACCESS_TOKEN: ${{ secrets.FROGBOT_ACCESS_TOKEN }}
+          # JF_ACCESS_TOKEN omitted — obtained via OIDC when oidc-provider-name is set.
 
-          # [Mandatory]
           JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-          # [Mandatory] Branch that Frogbot scans (and targets for autofix PRs)
+          # Branch that Frogbot scans (and targets for autofix PRs)
           JF_GIT_BASE_BRANCH: ${{ matrix.branch }}
 
           JF_USE_CONFIG_PROFILE: "true"
