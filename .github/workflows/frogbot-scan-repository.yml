@@ -1,0 +1,84 @@
+# Frogbot: full repository scan on a schedule and on demand; can open autofix PRs.
+# Setup: https://docs.jfrog.com/security/docs/frogbot
+# Template source: https://github.com/jfrog/frogbot/blob/master/.github/workflows/frogbot-scan-repository.yml
+
+name: "Frogbot Scan Repository"
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Once daily at 00:00 UTC (adjust as needed)
+    - cron: "0 0 * * *"
+
+permissions:
+  contents: write
+  pull-requests: write
+  security-events: write
+
+jobs:
+  scan-repository:
+    runs-on: ubuntu-latest
+    name: Scan Repository (${{ matrix.branch }} branch)
+    strategy:
+      matrix:
+        # Branches to scan (must exist on the remote)
+        branch: ["main"]
+    steps:
+      - uses: jfrog/frogbot@v2
+        env:
+          JFROG_CLI_LOG_LEVEL: "DEBUG"
+          # [Mandatory]
+          JF_URL: ${{ secrets.FROGBOT_URL }}
+
+          # [Mandatory if JF_USER and JF_PASSWORD are not provided]
+          JF_ACCESS_TOKEN: ${{ secrets.FROGBOT_ACCESS_TOKEN }}
+
+          # [Mandatory]
+          JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          # [Mandatory] Branch that Frogbot scans (and targets for autofix PRs)
+          JF_GIT_BASE_BRANCH: ${{ matrix.branch }}
+
+          JF_USE_CONFIG_PROFILE: "true"
+
+          # [Optional, default: https://api.github.com]
+          # JF_GIT_API_ENDPOINT: https://github.example.com
+
+          # [Optional] Air-gapped / proxy: remote generic repo pointing at https://releases.jfrog.io
+          # JF_RELEASES_REPO: ""
+
+          ##########################################################################
+          ## If you use .frogbot/frogbot-config.yml, many knobs can live there.   ##
+          ##########################################################################
+
+          # [Optional, default: "."]
+          # JF_WORKING_DIR: path/to/project/dir
+
+          # [Optional] Comma-separated Xray Watches
+          # JF_WATCHES: <watch-1>,<watch-2>
+
+          # [Optional] JFrog Project key
+          # JF_PROJECT: <project-key>
+
+          # [Optional, default: "TRUE"] Fail the job when issues are found
+          # JF_FAIL: "FALSE"
+
+          # [Optional] Virtual repository in Artifactory for dependency resolution
+          # JF_DEPS_REPO: ""
+
+          # [Optional] Autofix branch / PR templates ({BRANCH_NAME_HASH}, {IMPACTED_PACKAGE}, {FIX_VERSION})
+          # JF_BRANCH_NAME_TEMPLATE: "frogbot-{IMPACTED_PACKAGE}-{BRANCH_NAME_HASH}"
+          # JF_COMMIT_MESSAGE_TEMPLATE: "Upgrade {IMPACTED_PACKAGE} to {FIX_VERSION}"
+          # JF_PULL_REQUEST_TITLE_TEMPLATE: "[Frogbot] Upgrade {IMPACTED_PACKAGE} to {FIX_VERSION}"
+
+          # [Optional, default: "FALSE"] Single PR with all dependency fixes
+          # JF_GIT_AGGREGATE_FIXES: "TRUE"
+
+          # [Optional, default: "FALSE"]
+          # JF_FIXABLE_ONLY: "TRUE"
+
+          # [Optional] Low | Medium | High | Critical
+          # JF_MIN_SEVERITY: ""
+
+          # [Optional] Commit author email on autofix branches
+          # JF_GIT_EMAIL_AUTHOR: "frogbot@example.com"

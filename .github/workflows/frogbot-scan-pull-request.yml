@@ -1,0 +1,86 @@
+# Frogbot: scan pull requests for new security issues before merge.
+# Setup: https://docs.jfrog.com/security/docs/frogbot
+# Template source: https://github.com/jfrog/frogbot/blob/master/.github/workflows/frogbot-scan-pull-request.yml
+
+name: "Frogbot Scan Pull Request"
+
+on:
+  pull_request_target:
+    types: [opened, synchronize]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  scan-pull-request:
+    runs-on: ubuntu-latest
+    # Optional: require approval from users allowed to deploy to the "frogbot" GitHub Environment
+    # before Frogbot runs (reduces risk with pull_request_target). Remove `environment:` if you want
+    # every PR to scan without an environment gate.
+    environment: frogbot
+    steps:
+      - uses: jfrog/frogbot@v2
+        env:
+          JFROG_CLI_LOG_LEVEL: "DEBUG"
+          # [Mandatory]
+          # JFrog platform URL (requires Xray 3.29.0+)
+          JF_URL: ${{ secrets.FROGBOT_URL }}
+
+          # [Mandatory if JF_USER and JF_PASSWORD are not provided]
+          # JFrog access token with read permissions for Xray (and Advanced Security features as entitled)
+          JF_ACCESS_TOKEN: ${{ secrets.FROGBOT_ACCESS_TOKEN }}
+
+          # [Mandatory]
+          JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          JF_USE_CONFIG_PROFILE: "true"
+
+          # [Optional, default: https://api.github.com]
+          # JF_GIT_API_ENDPOINT: https://github.example.com
+
+          # [Optional] Air-gapped / proxy: remote generic repo pointing at https://releases.jfrog.io
+          # JF_RELEASES_REPO: ""
+
+          # [Optional] SMTP for email when secrets are detected (set secrets + receivers if used)
+          # JF_SMTP_SERVER: ${{ secrets.JF_SMTP_SERVER }}
+          # JF_SMTP_USER: ${{ secrets.JF_SMTP_USER }}
+          # JF_SMTP_PASSWORD: ${{ secrets.JF_SMTP_PASSWORD }}
+          # JF_EMAIL_RECEIVERS: "security@example.com"
+
+          ##########################################################################
+          ## If you use .frogbot/frogbot-config.yml, many knobs can live there.   ##
+          ##########################################################################
+
+          # [Mandatory for some ecosystems] e.g. yarn2 / NuGet / .NET without installCommand in config
+          # JF_INSTALL_DEPS_CMD: ""
+
+          # [Optional, default: "."]
+          # JF_WORKING_DIR: path/to/project/dir
+
+          # [Optional] Comma-separated Xray Watches
+          # JF_WATCHES: <watch-1>,<watch-2>
+
+          # [Optional] JFrog Project key
+          # JF_PROJECT: <project-key>
+
+          # [Optional, default: "FALSE"] Show all vulns on PR, not only newly introduced
+          # JF_INCLUDE_ALL_VULNERABILITIES: "TRUE"
+
+          # [Optional, default: "FALSE"] Keep previous Frogbot PR comments
+          # JF_AVOID_PREVIOUS_PR_COMMENTS_DELETION: "TRUE"
+
+          # [Optional, default: "TRUE"] Fail the job when issues are found
+          # JF_FAIL: "FALSE"
+
+          # [Optional] Virtual repository in Artifactory for dependency resolution
+          # JF_DEPS_REPO: ""
+
+          # [Optional, default: "FALSE"] Single PR with all dependency fixes
+          # JF_GIT_AGGREGATE_FIXES: "TRUE"
+
+          # [Optional, default: "FALSE"]
+          # JF_FIXABLE_ONLY: "TRUE"
+
+          # [Optional] Low | Medium | High | Critical
+          # JF_MIN_SEVERITY: ""
