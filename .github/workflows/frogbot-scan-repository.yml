@@ -30,6 +30,7 @@ jobs:
       - uses: jfrog/frogbot@v2
         with:
           oidc-provider-name: ${{ vars.JF_OIDC_PROVIDER_NAME }}
+          oidc-audience: ${{ vars.JF_OIDC_AUDIENCE }}
         env:
           JFROG_CLI_LOG_LEVEL: "DEBUG"
           JF_URL: ${{ vars.JF_URL }}

@@ -1,6 +1,7 @@
 
 name: 'JFrog CI Integration'
-on: [push]
+on:
+  workflow_dispatch:
 jobs:
  jfrog-ci-integration:
    runs-on: ubuntu-latest
