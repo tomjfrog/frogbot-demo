@@ -8,9 +8,21 @@ Small **Node.js / Express** sample used to **demonstrate [JFrog Frogbot](https:/
 
 - **Pull request scanning** — Frogbot comments on opened/updated PRs when issues are introduced or changed.
 - **Repository scanning** — On a schedule and via **Actions → Run workflow** (`workflow_dispatch`), with the option to open **fix PRs** against configured branches (default: `main`).
-- **Intentional SCA surface** — Older or problematic dependencies (for example `express` pinned to an older line, deprecated `request`, the `fs` placeholder package, duplicate `pack-zip`) so scans produce teachable results. A lockfile and stricter install commands (for example `npm ci`) can be added for a more deterministic scan story.
+- **Intentional SCA surface** — Older or problematic dependencies (for example `express` pinned to an older line, deprecated `request`, the `fs` placeholder package, duplicate `pack-zip`) so scans produce teachable results. **`package-lock.json`** is committed on **`main`** for a pinned dependency graph; the Frogbot PR workflow may still use **`npm install`**—you can switch it to **`npm ci`** for stricter lockfile installs.
 
-Some Frogbot features (SAST depth, secrets, IaC, CVE contextual analysis, license policy) depend on **platform entitlements and Xray version**; align expectations with your tenant before promising a given narrative.
+This demo is written for **JFrog Enterprise+** with **Advanced Security** enabled (SAST, secrets, contextual analysis, and related scanners as licensed). If you fork the repo onto a smaller subscription, turn off or soften claims in live pitches to match that tenant’s entitlements and Xray version.
+
+### Branch `lots-of-issues` (stress / PR narrative)
+
+**`main`** stays a lighter baseline (still useful for SCA on real-world-ish `package.json` choices). The branch **`lots-of-issues`** exists so you can open a **pull request into `main`** and show Frogbot in one pass without landing noisy samples on the default branch.
+
+On **`lots-of-issues`** you will find:
+
+- **Stronger SCA** — older pinned dependencies (for example downgraded `eslint`, `request`, and `jasmine-node` ranges) so PR scans surface more CVEs and severity spread.
+- **SAST** — intentionally unsafe patterns in `demo/` (clearly labeled demo-only code).
+- **Secrets detection** — obviously fake credential-shaped strings in `demo/` (labeled as non-production).
+
+Use this branch when you want a **dense Frogbot PR comment** (SCA + SAST + secrets + contextual analysis rows) for pre-sales or training, then contrast with a smaller change on **`main`** if needed.
 
 ---
 
@@ -21,7 +33,7 @@ Some Frogbot features (SAST depth, secrets, IaC, CVE contextual analysis, licens
 | [`.github/workflows/frogbot-scan-pull-request.yml`](.github/workflows/frogbot-scan-pull-request.yml) | Runs on `pull_request_target` (opened, synchronize). Checks out the PR head, installs Node, runs `jfrog/frogbot@v2` for **scan-pull-request**. Uses optional GitHub **Environment** `frogbot` as an approval gate. |
 | [`.github/workflows/frogbot-scan-repository.yml`](.github/workflows/frogbot-scan-repository.yml) | **Scheduled** (daily UTC) and **`workflow_dispatch`** full-repo scan; can create **autofix PRs** against the matrix branch (`main`). |
 | [`.github/workflows/build.yml`](.github/workflows/build.yml) | Legacy-style build workflow (JFrog CLI / npm publish pattern). Separate from Frogbot; useful only if you still want that pipeline in the demo. |
-| **`.frogbot/frogbot-config.yml`** *(optional, not in this repo yet)* | Repo-local Frogbot settings: branches, projects/working dirs, watches, JFrog project key, aggregate fixes, severity thresholds, per-project install commands, and more. See [config file docs](https://docs.jfrog.com/security/docs/the-frogbot-config-yml-file-structure). |
+| **`.frogbot/frogbot-config.yml`** *(JFrog-supported; not used in this demo)* | Optional repo-local Frogbot settings: branches, projects/working dirs, watches, JFrog project key, aggregate fixes, severity thresholds, per-project install commands, and more. This repository documents the format and relies on **workflow `env`** + optional **Xray config profile** instead. See [config file docs](https://docs.jfrog.com/security/docs/the-frogbot-config-yml-file-structure). |
 
 **GitHub Actions vs `frogbot-config.yml`**
 
@@ -60,6 +72,6 @@ For token-based setup instead of OIDC, see the [official GitHub Actions guide](h
 
 ## Suggested demo flow
 
-1. Open a PR that touches `package.json` or dependencies — observe **Frogbot** on the PR after the scan job completes.  
+1. Open a PR **from `lots-of-issues` into `main`** (or push updates to an existing one) — after the scan job completes, review the **Frogbot** comment for SCA, SAST, secrets, and contextual analysis. For a slimmer story, use a dependency-only PR from **`main`**.  
 2. Run **Actions → Frogbot Scan Repository → Run workflow** — show a full-branch scan and any **fix PR** Frogbot opens.  
-3. (Optional) Add `.frogbot/frogbot-config.yml` to show **branch lists**, **`aggregateFixes`**, or **watches** without cluttering the workflow file.
+3. Optional: tune **branch lists**, **`aggregateFixes`**, **watches**, or project keys via **`JF_*` environment variables** in the workflows ([upstream template comments](https://github.com/jfrog/frogbot/blob/master/.github/workflows/frogbot-scan-repository.yml)). Per-repo **`.frogbot/frogbot-config.yml`** is [supported by JFrog](https://docs.jfrog.com/security/docs/the-frogbot-config-yml-file-structure) but **not committed in this demo**—see **Configuration structure** above.
