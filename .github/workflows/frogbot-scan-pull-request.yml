@@ -38,7 +38,6 @@ jobs:
         uses: jfrog/frogbot@v2
         with:
           oidc-provider-name: ${{ vars.JF_OIDC_PROVIDER_NAME }}
-          oidc-audience: ${{ vars.JF_OIDC_AUDIENCE }}
         env:
           JFROG_CLI_LOG_LEVEL: "DEBUG"
           # JFrog platform URL (requires Xray 3.29.0+)
